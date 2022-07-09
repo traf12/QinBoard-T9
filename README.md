@@ -5,11 +5,17 @@ Supports devices with hardware keypads where Back key is also a Backspace key. P
 for mor information, (how to setup&hotkeys and more info) see [wiki](https://github.com/AshiVered/QinBoard-T9/wiki).
 
 aviable languages:
+
 English
+
 Russian
+
 French
+
 Italian
+
 Ukrainian
+
 Spanish
 
 Download:
