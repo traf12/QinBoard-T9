@@ -9,15 +9,15 @@
 	android:baselineAligned="true"
 	android:gravity="bottom"
 	android:orientation="horizontal" >
-
 	<ViewSwitcher
 		android:id="@+id/main_left"
-		android:layout_width="190px"
-		android:layout_height="58dp"
-		android:layout_marginLeft="1px"
-		android:layout_marginRight="1px"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_marginLeft="0dp"
+		android:layout_marginRight="0dp"
 		android:background="@drawable/button_custom"
-		android:clickable="true"
+		android:clickable="false"
 		android:focusable="false"
 		android:longClickable="true" >
 
@@ -28,28 +28,30 @@
 
 	<Button
 		android:id="@+id/main_mid"
-		android:layout_width="94px"
-		android:layout_height="58dp"
-		android:layout_marginLeft="1px"
-		android:layout_marginRight="1px"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_marginLeft="0px"
+		android:layout_marginRight="0px"
 		android:background="@drawable/button_custom"
 		android:focusable="false"
-		android:longClickable="true"
+		android:longClickable="false"
 		android:text="@string/main_mid"
 		android:textColor="@color/button_text" />
 
 	<RelativeLayout
 		android:id="@+id/main_right"
-		android:layout_width="190px"
-		android:layout_height="58dp"
-		android:layout_marginLeft="1px"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_marginLeft="0px"
 		android:layout_marginTop="0dp"
 		android:background="@drawable/button_custom"
-		android:clickable="true"
+		android:clickable="false"
 		android:focusable="false"
-		android:longClickable="true"
-		android:paddingLeft="2dp"
-		android:paddingTop="1dp" >
+		android:longClickable="false"
+		android:paddingLeft="0dp"
+		android:paddingTop="0dp" >
 
 		<include
 			android:layout_width="wrap_content"
@@ -57,5 +59,46 @@
 			android:layout_marginTop="0dp"
 			layout="@layout/rbutton" />
 	</RelativeLayout>
+
+	<Button
+		android:id="@+id/main_prev_word"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_marginLeft="0px"
+		android:layout_marginRight="0px"
+		android:visibility="invisible"
+		android:background="@drawable/button_custom"
+		android:focusable="false"
+		android:longClickable="false"
+		android:text="&lt;"
+		android:textColor="@color/button_text" />
+	
+	<Button
+		android:id="@+id/main_next_word"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_marginLeft="0px"
+		android:layout_marginRight="0px"
+		android:visibility="invisible"
+		android:background="@drawable/button_custom"
+		android:focusable="false"
+		android:longClickable="false"
+		android:text="&gt;"
+		android:textColor="@color/button_text" />
+
+	<Button
+		android:id="@+id/main_backspace"
+		android:layout_weight="1"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_marginLeft="0px"
+		android:layout_marginRight="0px"
+		android:background="@drawable/button_custom"
+		android:focusable="false"
+		android:longClickable="false"
+		android:text="del"
+		android:textColor="@color/button_text" />
 
 </LinearLayout>

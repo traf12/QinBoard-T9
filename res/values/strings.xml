@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string translatable="false" name="help_url">https://github.com/Clam-/TraditionalT9/wiki/Traditional-T9-keypad-IME-for-Android</string>
-	<string name="app_name">Traditional T9</string>
-	<string name="ime_name">Traditional T9</string>
+	<string name="app_name">QinBoard T9</string>
+	<string name="ime_name">QinBoard T9</string>
 	<string name="ime_number">Numbers</string>
 	<string name="pref_inputmode">Default Input Mode</string>
 	<string name="pref_inputmode_desc">Default mode used for \'normal\' text entry</string>
-	<string name="traditionalt9_settings">Traditional T9 Settings</string>
+	<string name="traditionalt9_settings">QinBoard T9 Settings</string>
 	<string name="main_left_insert">Insert symbol</string>
 	<string name="main_left_addword">Add word</string>
 	<string name="main_mid">Done</string>
@@ -69,14 +69,16 @@
 	<string name="pref_nuke_warn">Warning: This will delete your entire dictionary. Do you wish to continue?</string>
 	<string name="pref_nuke_title">Nuke IME dictionary</string>
 	<string name="pref_reloadKeys">Reload KeyMap</string>
-	<string name="pref_reloadKeysSum" translatable="false">Force reload of key mapping overrides</string>
-	<string name="pref_reloadKeysDone" translatable="false">Reload complete.</string>
-	<string name="pref_reloadKeysDoneWE" translatable="false">Reload complete with errors (check logcat.)</string>
-	<string name="pref_reloadKeysNoFile" translatable="false">No keymap.txt file found.</string>
-	<string name="pref_keyRemap" translatable="false">Translate keys</string>
-	<string name="pref_keyRemapSum" translatable="false">Enable to send translated keys to apps, otherwise keymap is for IME only.</string>
-	<string name="pref_spaceOnZero" translatable="false">Space on 0 key</string>
-
+	<string name="pref_reloadKeysSum">Force reload of key mapping overrides</string>
+	<string name="pref_reloadKeysDone">Reload complete.</string>
+	<string name="pref_reloadKeysDoneWE">Reload complete with errors (check logcat.)</string>
+	<string name="pref_reloadKeysNoFile">No keymap.txt file found.</string>
+	<string name="pref_keyRemap">Translate keys</string>
+	<string name="pref_keyRemapSum">Enable to send translated keys to apps, otherwise keymap is for IME only.</string>
+	<string name="pref_spaceOnZero">Space on 0 key</string>
+	<string name="pref_noSoftButtons">No soft buttons</string>
+	<string name="pref_noSoftButtonsSum">Not show soft buttons, implies \"Space on 0 key\" (Use # to change input mode)</string>
+	<string name="candidate_view_add_word">Add</string>
 	<string name="hello_world">Hello world!</string>
 
 </resources>

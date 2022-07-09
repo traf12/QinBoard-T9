@@ -46,7 +46,11 @@ public class TraditionalT9 extends InputMethodService implements
 	private boolean mFirstPress = false;
 	private boolean keyRemap = false;
 
+	private boolean nokiaKeyMap = true;
+
 	private boolean spaceOnZero = false;
+
+	private boolean noSoftButtons = false;
 
 	private boolean mIgnoreDPADKeyUp = false;
 	private KeyEvent mDPADkeyEvent = null;
@@ -136,6 +140,8 @@ public class TraditionalT9 extends InputMethodService implements
 		//updateKeyMode();
 		View v = getLayoutInflater().inflate(R.layout.mainview, null);
 		interfacehandler.changeView(v);
+		if (noSoftButtons)
+			interfacehandler.hideView();
 		if (mKeyMode == MODE_LANG) {
 			interfacehandler.showHold(true);
 		} else {
@@ -151,9 +157,13 @@ public class TraditionalT9 extends InputMethodService implements
 	@Override
 	public View onCreateCandidatesView() {
 		mCandidateView = new CandidateView(this);
+		mCandidateView.setAddWordOption(noSoftButtons);
 		return mCandidateView;
 	}
 
+	protected CandidateView getCandidateView() {
+		return mCandidateView;
+	}
 	protected void showSymbolPage() {
 		if (mSymbolPopup == null) {
 			mSymbolPopup = new SymbolDialog(this, getLayoutInflater().inflate(R.layout.symbolview,
@@ -277,13 +287,20 @@ public class TraditionalT9 extends InputMethodService implements
 
 		// get settings
 		Object[] settings = db.getSettings(new SETTING[] {
-			// 0, 1, 2,
-			SETTING.LANG_SUPPORT, SETTING.LAST_LANG, SETTING.MODE_NOTIFY,
-			// 3, 4, 5
-			SETTING.INPUT_MODE, SETTING.LAST_WORD, SETTING.SPACE_ZERO
+				// 0, 1, 2,
+				SETTING.LANG_SUPPORT, SETTING.LAST_LANG, SETTING.MODE_NOTIFY,
+				// 3, 4, 5
+				SETTING.INPUT_MODE, SETTING.LAST_WORD, SETTING.SPACE_ZERO,
+				// 6
+				SETTING.NO_SOFTBUTTONS
 		});
 
 		spaceOnZero = settings[5].equals(1);
+		noSoftButtons = settings[6].equals(1);
+		if (nokiaKeyMap)
+			noSoftButtons=true;
+		if (noSoftButtons)
+			spaceOnZero=true;
 		mLangsAvailable = LangHelper.buildLangs((Integer)settings[0]);
 		mLang = sanitizeLang(LANGUAGE.get((Integer)settings[1]));
 
@@ -539,14 +556,24 @@ public class TraditionalT9 extends InputMethodService implements
 				return super.onKeyDown(keyCode, event);
 			}
 
-		} else if (keyCode == KeyEvent.KEYCODE_DEL) {// Special handling of the delete key: if we currently are
+		} else if (keyCode == KeyEvent.KEYCODE_DEL || keyCode == KeyEvent.KEYCODE_BACK) {// Special handling of the delete key: if we currently are
 			// composing text for the user, we want to modify that instead
 			// of let the application do the delete itself.
-			// if (mComposing.length() > 0) {
-			onKey(keyCode, null);
+			// InputConnection ic = getCurrentInputConnection();
+			// if(ic.getTextBeforeCursor(1, 0).isNull) {
+			final InputConnection ic = getCurrentInputConnection();
+			if (ic != null) {
+				// When the text's first character is '.', remove the previous period
+				// if there is one.
+				CharSequence lastOne = ic.getTextBeforeCursor(1, 0);
+				if (lastOne.toString().equals("")) {
+					hideWindow();
+					handleClose();
+					return true;
+				}
+			}
+			onKey(KeyEvent.KEYCODE_DEL, null);
 			return true;
-			// }
-			// break;
 		}
 
 		// only handle first press except for delete
@@ -561,7 +588,7 @@ public class TraditionalT9 extends InputMethodService implements
 			// but we will manage it ourselves because native Android handling
 			// of the input view is ... flakey at best.
 			// Log.d("onKeyDown", "back pres");
-			return isInputViewShown();
+			//deleted by A.I.V;
 		} else if (keyCode == KeyEvent.KEYCODE_ENTER) {// Let the underlying text editor always handle these.
 			return false;
 
@@ -647,14 +674,7 @@ public class TraditionalT9 extends InputMethodService implements
 			}
 			return true;
 		} else if (keyCode == KeyEvent.KEYCODE_STAR) {
-			if (mKeyMode != MODE_NUM) {
-				if (mLangsAvailable.length > 1) {
-					nextLang();
-				} else {
-					showSmileyPage(); // TODO: replace with lang select if lang thing
-				}
-				return true;
-			}
+ 				showAddWord();
 
 		} else if (keyCode == KeyEvent.KEYCODE_SOFT_LEFT) {
 			if (interfacehandler != null) {
@@ -668,7 +688,8 @@ public class TraditionalT9 extends InputMethodService implements
 				}
 			}
 
-		} else if (keyCode == KeyEvent.KEYCODE_SOFT_RIGHT) {
+		}
+		else if (keyCode == KeyEvent.KEYCODE_SOFT_RIGHT) {
 			if (interfacehandler != null) {
 				interfacehandler.setPressed(keyCode, false);
 			}
@@ -693,8 +714,8 @@ public class TraditionalT9 extends InputMethodService implements
 	}
 
 	private boolean onKeyUp_(int keyCode, KeyEvent event) {
-	//		Log.d("onKeyUp", "Key: " + keyCode + " repeat?: " +
-	//			event.getRepeatCount());
+		//		Log.d("onKeyUp", "Key: " + keyCode + " repeat?: " +
+		//			event.getRepeatCount());
 		if (mEditing == NON_EDIT) {
 			// if (mButtonClose) {
 			// //handle UI weirdness on up event
@@ -731,13 +752,14 @@ public class TraditionalT9 extends InputMethodService implements
 			return true;
 		}
 
+
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (isInputViewShown()) {
-				hideWindow();
+				//deleted by A.I.V
 				return true;
 			}
 			return false;
-		} else if (keyCode == KeyEvent.KEYCODE_DEL) {
+		} else if (keyCode == KeyEvent.KEYCODE_DEL || keyCode == KeyEvent.KEYCODE_BACK) {
 			return true;
 		} else if (keyCode == KeyEvent.KEYCODE_ENTER) {
 			return false;
@@ -885,8 +907,14 @@ public class TraditionalT9 extends InputMethodService implements
 		} else if (keyCode == KeyEvent.KEYCODE_BACK) {
 			handleClose();
 		} else if (keyCode == KeyEvent.KEYCODE_POUND) {
-			// space
-			handleCharacter(KeyEvent.KEYCODE_POUND);
+			if (mKeyMode != MODE_NUM) {
+				if (mLangsAvailable.length > 1) {
+					nextLang();
+				} else {
+					showSmileyPage(); // TODO: replace with lang select if lang thing
+				}
+			//	return false;
+			}
 		} else if (keyCode == KeyEvent.KEYCODE_SOFT_LEFT) {
 			if (mWordFound) {
 				showSymbolPage();
@@ -932,7 +960,10 @@ public class TraditionalT9 extends InputMethodService implements
 		if (mComposing.length() > 0) {
 			switch (mKeyMode) {
 				case MODE_LANG:
-					commitTyped();
+					if (noSoftButtons && isAddWordOptionSelected())
+						showAddWord();
+					else
+						commitTyped();
 					break;
 				case MODE_TEXT:
 					commitTyped();
@@ -945,6 +976,10 @@ public class TraditionalT9 extends InputMethodService implements
 		} else {
 			hideWindow();
 		}
+	}
+
+	private boolean isAddWordOptionSelected() {
+		return mCandidateView.mSelectedIndex == mSuggestionStrings.size() - 1;
 	}
 
 	/**
@@ -1000,6 +1035,7 @@ public class TraditionalT9 extends InputMethodService implements
 					mComposing.append(mSuggestionStrings.get(0));
 					if (interfacehandler != null) {
 						interfacehandler.showNotFound(false);
+						interfacehandler.showScrollKeys(true);
 					}
 				} else {
 					mWordFound = false;
@@ -1007,10 +1043,11 @@ public class TraditionalT9 extends InputMethodService implements
 					setCandidatesViewShown(false);
 					if (interfacehandler != null) {
 						interfacehandler.showNotFound(true);
+						interfacehandler.showScrollKeys(false);
 					}
 				}
 				setSuggestions(mSuggestionStrings, 0);
-				} else {
+			} else {
 				setSuggestions(null, -1);
 				setCandidatesViewShown(false);
 				if (interfacehandler != null) {
@@ -1043,7 +1080,7 @@ public class TraditionalT9 extends InputMethodService implements
 		}
 	}
 
-	private void handleBackspace() {
+	public void handleBackspace() {
 		final int length = mComposing.length();
 		final int length2 = mComposingI.length();
 		if (mKeyMode == MODE_TEXT) {
@@ -1242,12 +1279,14 @@ public class TraditionalT9 extends InputMethodService implements
 				if (mKeyMode != MODE_NUM && mComposing.length() > 0) {
 					if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
 						mCandidateView.scrollSuggestion(1);
-						if (mSuggestionStrings.size() > mCandidateView.mSelectedIndex)
+
+						if (!(noSoftButtons && isAddWordOptionSelected())&&mSuggestionStrings.size() > mCandidateView.mSelectedIndex)
 							currentInputConnection.setComposingText(mSuggestionStrings.get(mCandidateView.mSelectedIndex), 1);
 						return true;
 					} else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
 						mCandidateView.scrollSuggestion(-1);
-						if (mSuggestionStrings.size() > mCandidateView.mSelectedIndex)
+
+						if (!(noSoftButtons && isAddWordOptionSelected())&&mSuggestionStrings.size() > mCandidateView.mSelectedIndex )
 							currentInputConnection.setComposingText(mSuggestionStrings.get(mCandidateView.mSelectedIndex), 1);
 						return true;
 					} else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
@@ -1312,7 +1351,7 @@ public class TraditionalT9 extends InputMethodService implements
 		modeNotification.setText(s);
 		modeNotification.show();
 		modeNotification.cancel(); 	// TODO: This will not always hide the Toast.
-									// will probably need to implement custom view
+		// will probably need to implement custom view
 	}
 
 	private void nextLang() {
@@ -1444,5 +1483,4 @@ public class TraditionalT9 extends InputMethodService implements
 	@Override
 	public void onRelease(int primaryCode) {
 	}
-
 }

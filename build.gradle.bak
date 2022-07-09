@@ -114,10 +114,10 @@ android {
 	// http://stackoverflow.com/a/19130098
 	signingConfigs {
 		release {
-       			storeFile file("YOUR_KEYSTORE_FILE")
-       			storePassword "YOUR_STOREPASSWORD"
-       			keyAlias "YOUR_KEYALIAS"
-       			keyPassword "YOUR_KEYPASSWORD"
+       			storeFile file("my-release-key.keystore")
+       			storePassword "9381381"
+       			keyAlias "aiv"
+       			keyPassword "9381381"
 		}
 	}
 

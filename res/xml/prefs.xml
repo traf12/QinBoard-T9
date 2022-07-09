@@ -16,12 +16,6 @@
 		entryValues="@array/pref_lang_values"
 		title="@string/pref_lang_title" />
 	<SettingCheck
-		id="pref_spaceOnZero"
-		title="@string/pref_spaceOnZero"
-		summary="@string/pref_keyRemapSum"
-		defaultValue="false"
-		/>
-	<SettingCheck
 		id="pref_mode_notify"
 		title="@string/pref_mode_notify"
 		summary="@string/pref_mode_notify_subtitle"
