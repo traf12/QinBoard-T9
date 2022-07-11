@@ -24,3 +24,7 @@ this version (QinBoard T9): from [releases page](https://github.com/AshiVered/Qi
 
 orginal version (Traditional T9):
 Available on Google Play: [Traditional T9 Keypad IME](https://play.google.com/store/apps/details?id=org.nyanya.android.traditionalt9)
+
+thanks:
+[@HarelYinon](https://github.com/HarelYinon) on the big help
+[@achakian0000](https://github.com/achakian0000)
