@@ -37,7 +37,7 @@
 	<string name="updating_database_unavailable">Wörterbuch-Datenbank wird aktualisiert. Worteingabe momentan nicht verfügbar.</string>
 
 	<string name="pref_lang_title">Sprachen…</string>
-	<string name="pref_help">"Hilfe anzeigen</string>
+	<string name="pref_help">"Github</string>
 	<string name="pref_loaddict">Wörterbuch laden</string>
 	<string name="pref_loaduserdict">Benutzerwörterbuch laden</string>
 	<string name="pref_nukedict">Wörterbuch löschen</string>

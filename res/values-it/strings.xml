@@ -37,7 +37,7 @@
     <string name="updating_database_unavailable">Aggiornamento database dizionario, inserimento parole non disponibile al momento.</string>
 
     <string name="pref_lang_title">Supporto multilingue…</string>
-    <string name="pref_help">"Mostra aiuto</string>
+    <string name="pref_help">"Github</string>
     <string name="pref_loaddict">Carica dizionario</string>
     <string name="pref_loaduserdict">Carica dizionario utente</string>
     <string name="pref_nukedict">Elimina dizionario</string>

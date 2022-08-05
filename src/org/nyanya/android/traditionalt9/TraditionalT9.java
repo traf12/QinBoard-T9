@@ -569,6 +569,7 @@ public class TraditionalT9 extends InputMethodService implements
 				if (lastOne.toString().equals("")) {
 					hideWindow();
 					handleClose();
+					ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
 					return true;
 				}
 			}

@@ -37,7 +37,7 @@
 	<string name="updating_database_unavailable">Actualizando base de datos del diccionario, el ingreso de palabras no estará disponible de momento.</string>
 
 	<string name="pref_lang_title">Soporte multilenguaje…</string>
-	<string name="pref_help">"Mostrar ayuda</string>
+	<string name="pref_help">"Github</string>
 	<string name="pref_loaddict">Cargar diccionario</string>
 	<string name="pref_loaduserdict">Cargar diccionario de usuario</string>
 	
