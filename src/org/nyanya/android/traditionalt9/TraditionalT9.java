@@ -527,6 +527,9 @@ public class TraditionalT9 extends InputMethodService implements
 		return key;
 	}
 
+	boolean shortPress = false;
+	boolean press;
+
 	private boolean onKeyDown_(int keyCode, KeyEvent event) {
 		//		Log.d("onKeyDown", "Key: " + event + " repeat?: " +
 //				event.getRepeatCount() + " long-time: " + event.isLongPress());
@@ -625,6 +628,17 @@ public class TraditionalT9 extends InputMethodService implements
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// Translate key
+
+		if (keyCode == KeyEvent.KEYCODE_POUND || keyCode == KeyEvent.KEYCODE_STAR) {
+			if(event.getAction() == KeyEvent.ACTION_DOWN){
+				event.startTracking();
+				if(event.getRepeatCount() == 0){
+					shortPress = true;
+				}
+				return true;
+			}
+		}
+
 		KeyEvent key = TranslateKey(keyCode, event);
 		if (key != null) {
 			keyCode = key.getKeyCode();
@@ -657,15 +671,39 @@ public class TraditionalT9 extends InputMethodService implements
 		hideWindow();
 		startActivity(awintent);
 	}
+
 	@Override
 	public boolean onKeyLongPress(int keyCode, KeyEvent event) {
 		// consume since we will assume we have already handled the long press
 		// if greater than 1
-		if (event.getRepeatCount() != 1) {
+		/*if (event.getRepeatCount() != 1) {
+			return true;
+		}
+		if (keyCode == KeyEvent.KEYCODE_POUND) {
+			press = true;
+		}
+
+
+		if (press == (true) && keyCode == KeyEvent.KEYCODE_0) {
+			handleShift();
+		}
+
+		 */
+
+
+		/*if (keyCode == KeyEvent.KEYCODE_POUND) {
+			shortPress = false;
+
+			return true;
+		} else if(keyCode == KeyEvent.KEYCODE_STAR) {
+			shortPress = false;
+
 			return true;
 		}
 
-		// Log.d("onLongPress", "LONG PRESS: " + keyCode);
+		 */
+
+		 /*Log.d("onLongPress", "LONG PRESS: " + keyCode);
 		// HANDLE SPECIAL KEYS
 		if (keyCode == KeyEvent.KEYCODE_POUND) {
 			commitReset();
@@ -698,6 +736,7 @@ public class TraditionalT9 extends InputMethodService implements
 			// show Options
 			return true;
 		}
+		  */
 		if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) {
 			if (mKeyMode == MODE_LANG) {
 				commitTyped();
@@ -715,8 +754,8 @@ public class TraditionalT9 extends InputMethodService implements
 	}
 
 	private boolean onKeyUp_(int keyCode, KeyEvent event) {
-		//		Log.d("onKeyUp", "Key: " + keyCode + " repeat?: " +
-		//			event.getRepeatCount());
+		//Log.d("onKeyUp", "Key: " + keyCode + " repeat?: " +
+		//event.getRepeatCount());
 		if (mEditing == NON_EDIT) {
 			// if (mButtonClose) {
 			// //handle UI weirdness on up event
@@ -817,6 +856,34 @@ public class TraditionalT9 extends InputMethodService implements
 			event = key;
 		}
 
+		if (keyCode == KeyEvent.KEYCODE_POUND) {
+			mCandidateView.scrollSuggestion(1);
+		}
+		if (keyCode == KeyEvent.KEYCODE_STAR) {
+			mCandidateView.scrollSuggestion(-1);
+		}
+
+
+
+
+		if (keyCode == KeyEvent.KEYCODE_POUND) {
+			if(shortPress){
+
+			} else {
+				//Don't handle longpress here, because the user will have to get his finger back up first
+			}
+			shortPress = false;
+			return true;
+		} else if(keyCode == KeyEvent.KEYCODE_STAR) {
+			if (shortPress) {
+
+			} else {
+				//Don't handle longpress here, because the user will have to get his finger back up first
+			}
+			shortPress = false;
+			return true;
+		}
+
 		if (!onKeyUp_(keyCode, event)) {
 			if (key == null || keyRemap) {
 				return false;
@@ -896,6 +963,27 @@ public class TraditionalT9 extends InputMethodService implements
 		// Log.d("OnKey", "pri: " + keyCode);
 		// Log.d("onKey", "START Cm: " + mCapsMode);
 		// HANDLE SPECIAL KEYS
+		if (shortPress == (true) && keyCode == KeyEvent.KEYCODE_1) {
+			handleShift();
+		}
+		if (shortPress == (true) && keyCode == KeyEvent.KEYCODE_2) {
+			nextKeyMode();
+		}
+		if (shortPress == (true) && keyCode == KeyEvent.KEYCODE_3) {
+			nextLang();
+		}
+		if (shortPress == (true) && keyCode == KeyEvent.KEYCODE_7) {
+			showAddWord();
+		}
+		if (shortPress == (true) && keyCode == KeyEvent.KEYCODE_8) {
+			launchOptions();
+		}
+		if (shortPress == (true) && keyCode == KeyEvent.KEYCODE_9) {
+			showSymbolPage();
+		}
+		if (shortPress == (true) && keyCode == KeyEvent.KEYCODE_0) {
+			onText("\n");
+		}
 		if (keyCode == KeyEvent.KEYCODE_DEL) {
 			handleBackspace();
 		} else if (keyCode == KeyEvent.KEYCODE_STAR) {
@@ -1154,6 +1242,9 @@ public class TraditionalT9 extends InputMethodService implements
 	 * @param keyCode
 	 */
 	private void handleCharacter(int keyCode) {
+		if (shortPress == (true)){
+			return;
+		}
 		switch (mKeyMode) {
 			case MODE_LANG:
 				// it begins
@@ -1278,19 +1369,19 @@ public class TraditionalT9 extends InputMethodService implements
 				return super.onKeyUp(keyCode, event);
 			} else {
 				if (mKeyMode != MODE_NUM && mComposing.length() > 0) {
-					if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+					if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
 						mCandidateView.scrollSuggestion(1);
 
 						if (!(noSoftButtons && isAddWordOptionSelected())&&mSuggestionStrings.size() > mCandidateView.mSelectedIndex)
 							currentInputConnection.setComposingText(mSuggestionStrings.get(mCandidateView.mSelectedIndex), 1);
 						return true;
-					} else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+					} else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
 						mCandidateView.scrollSuggestion(-1);
 
 						if (!(noSoftButtons && isAddWordOptionSelected())&&mSuggestionStrings.size() > mCandidateView.mSelectedIndex )
 							currentInputConnection.setComposingText(mSuggestionStrings.get(mCandidateView.mSelectedIndex), 1);
 						return true;
-					} else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+					} else if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
 						if (mKeyMode == MODE_LANG) {
 							commitTyped();
 						} else if (mKeyMode == MODE_TEXT) {
